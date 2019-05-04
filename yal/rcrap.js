@@ -18,14 +18,13 @@ module.exports = class Rcrap {
     static processCom(message, com) {
         switch (com) {
             case "t-ou":
-                    message.channel.send("Nulle part, justement :'( ...\n" +
-                        "Trouvez moi une maison plz! (sauvez moi jpp!!)")
+                    message.channel.send("Sur le MAGNIFIQUE https://glitch.com");
                 return true;
 
             case "c-ki":
-                    message.channel.send("Error: NotImplementedException at [..]")
-                    message.channel.send("(bref, tu vois l'idée quoi)")
-                break;
+                    message.channel.send("Error: NotImplementedException at [..]");
+                    message.channel.send("(bref, tu vois l'idée quoi)");
+                return true;
 
             case "jtm":
             case "tg":
