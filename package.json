@@ -1,6 +1,6 @@
 {
   "name": "yal",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "YourAnimeList",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/PictElm/YAL#readme",
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^8.0.0",
     "jikan-node": "^1.1.2"
   }
 }

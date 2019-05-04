@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -35,4 +37,4 @@ client.on('message', message => {
         hold[id] = undefined;
 });
 
-client.login(require('./yal/secret.js'));
+client.login(process.env.TOKEN).catch(err => console.log(err) + process.exit(1));
