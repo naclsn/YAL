@@ -10,5 +10,5 @@ To get YAL to respond, you want to start your message with `"yal,"` (case insens
 
 YAL only supports so many commands, as of right now:
 
-1. `"c-kwa"`: if YAL know this term he will return its translation (from _weeb_ to _humain_) else he will ask in its turn what this is so you can make it learn.
-0. `"c-ou"`: YAL goes through the pain of looking-up MAL for an anime name you provided, then it sends a link. If this is not what you where looking for, you can anser `"non"` to get 5 other names.
+1. `"c-kwa"`: if YAL know this term he will return its translation (from _weeb_ to _humain_) else he will ask in its turn what this is so it can learn.
+0. `"c-ou"`: YAL goes through the pain of looking-up MAL for an anime name you provided, then it sends a link. If this is not what you where looking for, you can answer negatively to get 5 other names.
