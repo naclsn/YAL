@@ -97,27 +97,27 @@ module.exports = class YAL {
 
         switch (args.old.get(0)) {
             case "c-ou":
-                    if (args.isNegative(0) || args.isNegative(1)) {
+                    if (args.isNegative(0) || (args.has() > 1 && args.isNegative(1))) {
                         let c = "<@" + args.dude.id + "> Alors peut-être :", k = 0;
                         args.iterNext(5).forEach(e => c+= "\n\t" + ++k + ". " + e.title);
                         sendMessage(c);
                         args.insert(0, "c-ou");
-                    } else if (args.isPositive(0) || args.isPositive(1)) {
+                    } else if (args.isPositive(0) || (args.has() > 1 && args.isPositive(1))) {
                         sendMessage("Nice, dr!");
                         args.keep(false);
                     } else {
                         let hint = args.raw(0, -1);
                         let k = hint.search(/[1-5]/g);
                         if (-1 < k)
-                            sendMessage(iterGet(Number(hint[k]) + args.indx - 6).url)
+                            sendMessage(args.iterGet(Number(hint[k]) + args.indx - 6).url)
                         else args.keep(false);
                     }
                 break;
 
             case "c-kwa":
-                    if (args.isNegative(0) || args.isNegative(1))
+                    if (args.isNegative(0) || (args.has() > 1 && args.isNegative(1)))
                         sendMessage("<@" + args.dude.id + "> Alors jsp x/, c quoi ?");
-                    else if (args.isPositive(0) || args.isPositive(1)) {
+                    else if (args.isPositive(0) || (args.has() > 1 && args.isPositive(1))) {
                         sendMessage("Nice, dr!");
                         args.keep(false);
                     }

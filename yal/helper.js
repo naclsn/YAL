@@ -68,7 +68,10 @@ module.exports = class Helper {
         else return this.clean.slice(i, j < 0 ? this.messg.length + 1 : j).join(" ")
     }
 
-    has(c, i=0, j=null) {
+    has(c=null, i=0, j=null) {
+        if (c === null)
+            return this.clean.length;
+
         if (j === null)
             j = this.clean.length;
 
