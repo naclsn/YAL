@@ -6,7 +6,7 @@ YAL (YourAnimeList) is a [Discord](https://discordapp.com/) bot designed to prov
 
 To get YAL to respond, you want to start your message with `"yal,"` (case insensitive) then follow with the desired command.
 
-<img src="https://github.com/PictElm/YAL/raw/master/img/c-kwa.png" width="250">
+![c-kwa example](https://github.com/PictElm/YAL/raw/master/img/c-kwa.png)
 
 YAL only supports so many commands:
 
@@ -17,10 +17,10 @@ YAL only supports so many commands:
 
 If YAL answered with a question, you should reply omitting the `"yal,"`.
 
-<img src="https://github.com/PictElm/YAL/raw/master/img/c-ou.png" width="250">
+![c-ou example](https://github.com/PictElm/YAL/raw/master/img/c-ou.png)
 
 YAL can see when a response is _negative_ (e.g.: "no", "nop", "non", "nah", "nn"...) or _positive_ ("yes", "yep", "ye", "oui", "ui"...) or if it contains a number:
 
-<img src="https://github.com/PictElm/YAL/raw/master/img/follow-up.png" width="250">
+![follow-up to c-ou](https://github.com/PictElm/YAL/raw/master/img/follow-up.png)
 
 > Side note: YAL only listen for an answer from whoever he asked anything. If the next message of that user doesn't look like a valid answer, YAL should not take it into account and will consider the exchange as terminated (will stop waiting for an answer to its question).
