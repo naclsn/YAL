@@ -15,6 +15,10 @@ client.on('ready', () => {
     console.log('I is ready!');
 });
 
+client.on('error', error => {
+    console.log(error);
+});
+
 client.on('message', message => {
     if (message.author.bot) return;
 
