@@ -1,6 +1,13 @@
 {
-    "names": {
+    "anime": {
         "tpn": "the promised neverland",
         "opm": "one punch man"
+    },
+    "manga": {
+        "jsp": "je sais pas"
+    },
+    "other": {
+        "mal": "my anime list",
+        "yal": "your anime list <3"
     }
 }

@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 const YAL = require('./yal/that.js');
-const that = new YAL("./refs.json");
+const that = new YAL();
 
 const Helper = require('./yal/helper.js');
 const hold = {};

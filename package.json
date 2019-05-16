@@ -4,7 +4,8 @@
   "description": "YourAnimeList",
   "main": "index.js",
   "scripts": {
-    "test": "yal"
+    "test": "yal",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

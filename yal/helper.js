@@ -82,7 +82,10 @@ module.exports = class Helper {
     }
 
     insert(i=0, c="") {
-        this.clean.splice(i, 0, c);
+        if (i < 0)
+            this.clean.push(c);
+        else this.clean.splice(i, 0, c);
+
         return this;
     }
 

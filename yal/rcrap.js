@@ -15,10 +15,15 @@ module.exports = class Rcrap {
         } return false
     }
 
-    static processCom(message, com) {
+    static processCom(message, com, refs) {
         switch (com) {
+            case "coucou":
+                    message.channel.send(JSON.stringify(refs));
+                return true;
+
             case "t-ou":
-                    message.channel.send("Sur le MAGNIFIQUE https://glitch.com");
+                    message.channel.send("Mon code est ici https://github.com/PictElm/YAL,");
+                    message.channel.send("et moi je suis là https://pictelm-yal.glitch.me/ !");
                 return true;
 
             case "c-ki":
