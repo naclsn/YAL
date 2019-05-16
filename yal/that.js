@@ -10,9 +10,9 @@ module.exports = class YAL {
     constructor() {
         this.refs = {};
 
-        fs.readFile('./refs.json', (err, data) => {
+        fs.readFile('./yal/refs.json', (err, data) => {
             if (err) throw err;
-            this.refs = data;
+            this.refs = JSON.parse(data);
         });
     }
 
@@ -162,7 +162,7 @@ module.exports = class YAL {
             case "change":
                     this.refs[args.old.get(1)][args.old.get(2)] = args.raw(0, -1);
 
-                    fs.writeFile('./refs.json', JSON.stringify(this.refs), (err) => {  
+                    fs.writeFile('./yal/refs.json', JSON.stringify(this.refs), (err) => {  
                         if (err) throw err;
                         console.log('Data written to file');
                     });
