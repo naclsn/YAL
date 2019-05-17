@@ -40,15 +40,19 @@ client.on('message', message => {
         return;
     }
 
+    if (msg.startsWith("yal?") || msg.startsWith("yal ?")) {
+        that.getHelp(sendMessage);
+        return;
+    }
+
     // command process
-    if (msg.startsWith("yal,") || msg.startsWith("yal ,")) {
-        hold[id] = new Helper(message.author, msg.slice(msg.indexOf(',') + 1));
+    if (msg.startsWith("yal")) {
+        hold[id] = new Helper(message.author, msg.replace(/yal *,?/i, ""));
         that.mainSwitch(hold[id], sendMessage, message);
     } else if (hold[id] !== undefined && hold[id].keep()) {
         hold[id].followup(msg);
         that.followSwitch(hold[id], sendMessage, message);
-    } else if (msg.startsWith("yal?") || msg.startsWith("yal ?"))
-        that.getHelp(sendMessage);
+    }
 
     if (hold[id] !== undefined && !hold[id].keep())
         hold[id] = undefined;

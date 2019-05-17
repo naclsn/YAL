@@ -25,24 +25,26 @@ module.exports = class YAL {
     }
 
     extractWhatSearch(args, at=1, or=null) {
-        let what = null;
-        let search = args.raw(1, -1);
+        let da = { what: or, search: args.raw(at, -1) };
+
+        if (args.get(at) == undefined)
+            return da;
 
         if (args.get(at).startsWith("(")) {
             if (args.get(at).endsWith(")")) {
-                what = args.get(at).substring(1, args.get(at).length - 1).trim();
-                search = args.raw(at + 1, -1);
+                da.what = args.get(at).substring(1, args.get(at).length - 1).trim();
+                da.search = args.raw(at + 1, -1);
             } else {
                 let k = args.get(at).search(/\)/g);
-                what = args.get(at).substring(1, k).trim();
-                search = args.get(at).substring(k + 1) + args.raw(at + 1, -1);
+                da.what = args.get(at).substring(1, k).trim();
+                da.search = args.get(at).substring(k + 1) + args.raw(at + 1, -1);
             }
         }
 
-        if (what == null)
-            what = this.findCategory(search) || or;
+        if (da.what == or)
+            da.what = this.findCategory(da.search) || or;
 
-        return { what: what, search: search };
+        return { what: da.what, search: da.search };
     }
 
     getHelp(sendMessage) {
@@ -89,7 +91,7 @@ module.exports = class YAL {
                         da = this.extractWhatSearch(args, 1, "other");
 
                         if (!this.refs.hasOwnProperty(da.what) || !this.refs[da.what].hasOwnProperty(da.search)) {
-                            sendMessage("Oups jsp x/, c'est quoi ?");
+                            sendMessage("Hum, je n'sais pas... c'est quoi '(" + da.what + ") " + da.search + "' ?");
                             if (da.what == "other")
                                 sendMessage("(avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
 
@@ -190,14 +192,14 @@ module.exports = class YAL {
                         args.keep(false);
                         break;
                     }*/
-                    da.what = args.old.get(1);
-                    da.search = args.old.get(2);
+                    da = { what: args.old.get(1), search: args.old.get(2) };
 
                     if (da.what == "other")
-                        da = this.extractWhatSearch(args, 0, "other");
+                        da.what = this.extractWhatSearch(args, 0, "other").what;
 
                     this.refs[da.what][da.search] = args.raw(0, -1);
 
+                    sendMessage("Ok..");
                     fs.writeFile('./yal/refs.json', JSON.stringify(this.refs), (err) => {  
                         if (err) throw err;
                         console.log('Data written to file');
