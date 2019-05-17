@@ -42,7 +42,7 @@ client.on('message', message => {
 
     // command process
     if (msg.startsWith("yal,") || msg.startsWith("yal ,")) {
-        hold[id] = new Helper(message.author, msg.split(',', 2)[1]);
+        hold[id] = new Helper(message.author, msg.slice(msg.indexOf(',') + 1));
         that.mainSwitch(hold[id], sendMessage, message);
     } else if (hold[id] !== undefined && hold[id].keep()) {
         hold[id].followup(msg);

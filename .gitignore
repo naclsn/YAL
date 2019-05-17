@@ -77,6 +77,3 @@ typings/
 
 # Code local settings
 .vscode/
-
-# YAL references file
-refs.json
