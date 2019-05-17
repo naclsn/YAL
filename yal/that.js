@@ -77,7 +77,7 @@ module.exports = class YAL {
                         }
 
                         if (what == null)
-                            what = this.findCategorie(search) || "other";
+                            what = this.findCategory(search) || "other";
 
                         if (!this.refs.hasOwnProperty(what) || !this.refs[what].hasOwnProperty(search)) {
                             sendMessage("Oups jsp x/, c'est quoi ? (avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
@@ -106,7 +106,7 @@ module.exports = class YAL {
                         }
 
                         if (what == null)
-                            what = this.findCategorie(search) || "other";
+                            what = this.findCategory(search) || "other";
 
                         if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
                             sendMessage("Ok, et je remplace avec quoi ?");
@@ -116,6 +116,32 @@ module.exports = class YAL {
                         args.insert(2, search)
                         args.keep(true);
                     } else sendMessage("Mais.. change quoi ? (Moi ?! J'suis très bien comme ça !)");
+                break;
+
+            case "oublie":
+                    let what = null;
+                    let search = args.raw(1, -1);
+
+                    if (args.get(1).startsWith("(")) {
+                        if (args.get(1).endsWith(")")) {
+                            what = args.get(1).substring(1, args.get(1).length - 1).trim();
+                            search = args.raw(2, -1);
+                        } else {
+                            let k = args.get(1).search(/\)/g);
+                            what = args.get(1).substring(1, k).trim();
+                            search = args.get(1).substring(k + 1) + args.raw(2, -1);
+                        }
+                    }
+
+                    if (what == null)
+                        what = this.findCategory(search) || "other";
+
+                    if (this.refs.hasOwnProperty(what)) {
+                        this.refs[what][search] = undefined;
+                        sendMessage("C'est fait !");
+                    } else sendMessage("Rien a oublier...");
+
+                    args.keep(false);
                 break;
 
             case "c-ou":
@@ -134,7 +160,7 @@ module.exports = class YAL {
                     }
 
                     if (what == null)
-                        what = this.findCategorie(search) || "anime";
+                        what = this.findCategory(search) || "anime";
 
                     if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
                         search = this.refs[what][search];

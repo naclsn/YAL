@@ -17,10 +17,6 @@ module.exports = class Rcrap {
 
     static processCom(message, com, refs) {
         switch (com) {
-            case "coucou":
-                    message.channel.send(JSON.stringify(refs));
-                return true;
-
             case "t-ou":
                     message.channel.send("Mon code est ici https://github.com/PictElm/YAL,");
                     message.channel.send("et moi je suis là https://pictelm-yal.glitch.me/ !");

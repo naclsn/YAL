@@ -28,6 +28,19 @@ client.on('message', message => {
 
     if (Rcrap.processMsg(message)) return; // useless hardcoded random crap
 
+    // debug
+    if (msg == "yal, coucou") {
+        sendMessage(JSON.stringify(hold, null, 4));
+        return;
+    } else if (msg == "yal, tu sais quoi") {
+        sendMessage(JSON.stringify(that.refs, null, 4));
+        return;
+    } else if (msg == "yal, range ta chambre") {
+        hold = {};
+        return;
+    }
+
+    // command process
     if (msg.startsWith("yal,") || msg.startsWith("yal ,")) {
         hold[id] = new Helper(message.author, msg.split(',', 2)[1]);
         that.mainSwitch(hold[id], sendMessage, message);
