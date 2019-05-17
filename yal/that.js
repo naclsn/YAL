@@ -16,6 +16,13 @@ module.exports = class YAL {
         });
     }
 
+    findCategory(search) {
+        for (var what in this.refs) {
+            if (this.refs[what].hasOwnProperty(search))
+                return what;
+        } return null;
+    }
+
     getHelp(sendMessage) {
         let infos = "";
         for (var what in this.refs) {
@@ -55,22 +62,25 @@ module.exports = class YAL {
             // serious bizz
             case "c-kwa":
                     if (1 < args.count()) {
-                        let what = "anime";
+                        let what = null;
                         let search = args.raw(1, -1);
 
                         if (args.get(1).startsWith("(")) {
                             if (args.get(1).endsWith(")")) {
                                 what = args.get(1).substring(1, args.get(1).length - 1).trim();
-                                search = args.raw(2, -1);
+                                search = args.raw(1, -1);
                             } else {
                                 let k = args.get(1).search(/\)/g);
                                 what = args.get(1).substring(1, k).trim();
-                                search = args.get(1).substring(k + 1) + args.raw(2, -1);
+                                search = args.get(1).substring(k + 1) + args.raw(1, -1);
                             }
                         }
 
+                        if (what == null)
+                            what = this.findCategorie(search) || "other";
+
                         if (!this.refs.hasOwnProperty(what) || !this.refs[what].hasOwnProperty(search)) {
-                            sendMessage("Oups jsp x/, c'est quoi ? (avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'anime')");
+                            sendMessage("Oups jsp x/, c'est quoi ? (avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
 
                             args.insert(1, what)
                             args.insert(2, search)
@@ -81,7 +91,7 @@ module.exports = class YAL {
 
             case "change":
                     if (1 < args.count()) {
-                        let what = "anime";
+                        let what = null;
                         let search = args.raw(1, -1);
 
                         if (args.get(1).startsWith("(")) {
@@ -95,6 +105,9 @@ module.exports = class YAL {
                             }
                         }
 
+                        if (what == null)
+                            what = this.findCategorie(search) || "other";
+
                         if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
                             sendMessage("Ok, et je remplace avec quoi ?");
                         else sendMessage("Ok, et donc c'est quoi ?");
@@ -102,11 +115,11 @@ module.exports = class YAL {
                         args.insert(1, what)
                         args.insert(2, search)
                         args.keep(true);
-                    } else sendMessage("Mais.. change quoi ? Moi ?! J'suis très bien comme ça !");
+                    } else sendMessage("Mais.. change quoi ? (Moi ?! J'suis très bien comme ça !)");
                 break;
 
             case "c-ou":
-                    let what = "anime";
+                    let what = null;
                     let search = args.raw(1, -1);
 
                     if (args.get(1).startsWith("(")) {
@@ -120,10 +133,11 @@ module.exports = class YAL {
                         }
                     }
 
-                    if (this.refs.names.hasOwnProperty(args.get(1)))
-                        search = this.refs.names[args.get(1)];
-                    else if (this.refs.names.hasOwnProperty(search))
-                        search = this.refs.names[search];
+                    if (what == null)
+                        what = this.findCategorie(search) || "anime";
+
+                    if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
+                        search = this.refs[what][search];
 
                     console.log("seaching for " + search + " as a(n) " + what);
                     sendMessage("Att, je cherche...");
@@ -146,7 +160,7 @@ module.exports = class YAL {
                 break;
 
             default:
-                sendMessage("<3             `yal?` si t'est perdu(e) ;-)");
+                sendMessage("<3             fait `yal?` si t'est perdu(e) ;-)");
                 args.keep(false)
         }
 
@@ -160,16 +174,35 @@ module.exports = class YAL {
                         this.refs[args.old.get(1)] = {};
 
             case "change":
-                    this.refs[args.old.get(1)][args.old.get(2)] = args.raw(0, -1);
+                    /*if (args.isNegative(0)) {
+                        sendMessage("Aborting update due to negatively interpreted answer '" + args.raw(0) + "'");
+                        args.keep(false);
+                        break;
+                    }*/
+                    let what = args.old.get(1);
+                    let search = args.old.get(2);
+
+                    if (what == "other") {
+                        if (args.get(0).startsWith("(")) {
+                            if (args.get(0).endsWith(")")) {
+                                what = args.get(0).substring(1, args.get(0).length - 1).trim();
+                                search = args.raw(1, -1);
+                            } else {
+                                let k = args.get(0).search(/\)/g);
+                                what = args.get(0).substring(1, k).trim();
+                                search = args.get(0).substring(k + 1) + args.raw(1, -1);
+                            }
+                        }
+                    }
+
+                    this.refs[what][search] = args.raw(0, -1);
 
                     fs.writeFile('./yal/refs.json', JSON.stringify(this.refs), (err) => {  
                         if (err) throw err;
                         console.log('Data written to file');
+                        sendMessage("C'est noté ;)");
                     });
-                    
-                    
 
-                    sendMessage("C'est noté ;)");
                     args.keep(false);
                 break;
 
