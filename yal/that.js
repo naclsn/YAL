@@ -23,6 +23,27 @@ module.exports = class YAL {
         } return null;
     }
 
+    extractWhatSearch(args, at=1, or=null) {
+        let what = null;
+        let search = args.raw(1, -1);
+
+        if (args.get(at).startsWith("(")) {
+            if (args.get(at).endsWith(")")) {
+                what = args.get(at).substring(1, args.get(at).length - 1).trim();
+                search = args.raw(at + 1, -1);
+            } else {
+                let k = args.get(at).search(/\)/g);
+                what = args.get(at).substring(1, k).trim();
+                search = args.get(at).substring(k + 1) + args.raw(at + 1, -1);
+            }
+        }
+
+        if (what == null)
+            what = this.findCategory(search) || or;
+
+        return { what: what, search: search };
+    }
+
     getHelp(sendMessage) {
         let infos = "";
         for (var what in this.refs) {
@@ -51,6 +72,8 @@ module.exports = class YAL {
     mainSwitch(args, sendMessage, message) {
         if (Rcrap.processCom(message, args.get(0), this.refs)) return; // useless hardcoded random crap²
 
+        let da = null;
+
         switch (args.get(0)) {
             // same as `yal?`
             case "ptdr":
@@ -62,82 +85,39 @@ module.exports = class YAL {
             // serious bizz
             case "c-kwa":
                     if (1 < args.count()) {
-                        let what = null;
-                        let search = args.raw(1, -1);
+                        da = this.extractWhatSearch(args, 1, "other");
 
-                        if (args.get(1).startsWith("(")) {
-                            if (args.get(1).endsWith(")")) {
-                                what = args.get(1).substring(1, args.get(1).length - 1).trim();
-                                search = args.raw(1, -1);
-                            } else {
-                                let k = args.get(1).search(/\)/g);
-                                what = args.get(1).substring(1, k).trim();
-                                search = args.get(1).substring(k + 1) + args.raw(1, -1);
-                            }
-                        }
+                        if (!this.refs.hasOwnProperty(da.what) || !this.refs[da.what].hasOwnProperty(da.search)) {
+                            sendMessage("Oups jsp x/, c'est quoi ?");
+                            if (da.what == "other")
+                                sendMessage("(avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
 
-                        if (what == null)
-                            what = this.findCategory(search) || "other";
-
-                        if (!this.refs.hasOwnProperty(what) || !this.refs[what].hasOwnProperty(search)) {
-                            sendMessage("Oups jsp x/, c'est quoi ? (avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
-
-                            args.insert(1, what)
-                            args.insert(2, search)
+                            args.insert(1, da.what)
+                            args.insert(2, da.search)
                             args.keep(true);
-                        } else sendMessage(this.refs[what][search]);
+                        } else sendMessage(this.refs[da.what][da.search]);
                     } else this.getHelp();
                 break;
 
             case "change":
                     if (1 < args.count()) {
-                        let what = null;
-                        let search = args.raw(1, -1);
+                        da = this.extractWhatSearch(args, 1, "other");
 
-                        if (args.get(1).startsWith("(")) {
-                            if (args.get(1).endsWith(")")) {
-                                what = args.get(1).substring(1, args.get(1).length - 1).trim();
-                                search = args.raw(2, -1);
-                            } else {
-                                let k = args.get(1).search(/\)/g);
-                                what = args.get(1).substring(1, k).trim();
-                                search = args.get(1).substring(k + 1) + args.raw(2, -1);
-                            }
-                        }
-
-                        if (what == null)
-                            what = this.findCategory(search) || "other";
-
-                        if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
+                        if (this.refs.hasOwnProperty(da.what) && this.refs[da.what].hasOwnProperty(da.search))
                             sendMessage("Ok, et je remplace avec quoi ?");
                         else sendMessage("Ok, et donc c'est quoi ?");
 
-                        args.insert(1, what)
-                        args.insert(2, search)
+                        args.insert(1, da.what)
+                        args.insert(2, da.search)
                         args.keep(true);
                     } else sendMessage("Mais.. change quoi ? (Moi ?! J'suis très bien comme ça !)");
                 break;
 
             case "oublie":
-                    let what = null;
-                    let search = args.raw(1, -1);
+                    da = this.extractWhatSearch(args, 1, "other");
 
-                    if (args.get(1).startsWith("(")) {
-                        if (args.get(1).endsWith(")")) {
-                            what = args.get(1).substring(1, args.get(1).length - 1).trim();
-                            search = args.raw(2, -1);
-                        } else {
-                            let k = args.get(1).search(/\)/g);
-                            what = args.get(1).substring(1, k).trim();
-                            search = args.get(1).substring(k + 1) + args.raw(2, -1);
-                        }
-                    }
-
-                    if (what == null)
-                        what = this.findCategory(search) || "other";
-
-                    if (this.refs.hasOwnProperty(what)) {
-                        this.refs[what][search] = undefined;
+                    if (this.refs.hasOwnProperty(da.what)) {
+                        this.refs[da.what][da.search] = undefined;
                         sendMessage("C'est fait !");
                     } else sendMessage("Rien a oublier...");
 
@@ -145,48 +125,38 @@ module.exports = class YAL {
                 break;
 
             case "c-ou":
-                    let what = null;
-                    let search = args.raw(1, -1);
+                    da = this.extractWhatSearch(args, 1, "anime");
 
-                    if (args.get(1).startsWith("(")) {
-                        if (args.get(1).endsWith(")")) {
-                            what = args.get(1).substring(1, args.get(1).length - 1).trim();
-                            search = args.raw(2, -1);
-                        } else {
-                            let k = args.get(1).search(/\)/g);
-                            what = args.get(1).substring(1, k).trim();
-                            search = args.get(1).substring(k + 1) + args.raw(2, -1);
-                        }
+                    if (this.refs.hasOwnProperty(da.what) && this.refs[da.what].hasOwnProperty(da.search))
+                        da.search = this.refs[da.what][da.search];
+
+                    if (da.what == "other") {
+                        sendMessage("hum.. je pense pas que ça se trouve sur MAL...");
+                        args.keep(false);
+                    } else {
+                        console.log("seaching for " + da.search + " as a(n) " + da.what);
+                        sendMessage("Att, je cherche...");
+                        mal.search(da.what, da.search)
+                            .then(info => {
+                                if (info.results[0] !== undefined) {
+                                    sendMessage("<@" + args.dude.id + "> " + info.results[0].url + " ici ?");
+                                    args.iterSet(info.results);
+                                } else sendMessage("Oh?! j'ai rien trouvé...");
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                sendMessage("Oups, erreur interne... ><");
+                                if (err.message.contains("Response:"))
+                                    sendMessage("'" + err + "' en fait.. c pas ma faute on dirrait, lol");
+                                args.iterSet([err]);
+                            });
+
+                        args.keep(true);
                     }
-
-                    if (what == null)
-                        what = this.findCategory(search) || "anime";
-
-                    if (this.refs.hasOwnProperty(what) && this.refs[what].hasOwnProperty(search))
-                        search = this.refs[what][search];
-
-                    console.log("seaching for " + search + " as a(n) " + what);
-                    sendMessage("Att, je cherche...");
-                    mal.search(what, search)
-                        .then(info => {
-                            if (info.results[0] !== undefined) {
-                                sendMessage("<@" + args.dude.id + "> " + info.results[0].url + " ici ?");
-                                args.iterSet(info.results);
-                            } else sendMessage("Oh?! j'ai rien trouvé...");
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            sendMessage("Oups, erreur interne... ><");
-                            if (err.message.contains("Response:"))
-                                sendMessage("'" + err + "' en fait.. c pas ma faute on dirrait, lol");
-                            args.iterSet([err]);
-                        });
-
-                    args.keep(true);
                 break;
 
             default:
-                sendMessage("<3             fait `yal?` si t'est perdu(e) ;-)");
+                sendMessage("wut?             fait `yal?` si t'est perdu(e) ;-)");
                 args.keep(false)
         }
 
@@ -194,6 +164,8 @@ module.exports = class YAL {
     }
 
     followSwitch(args, sendMessage, message) {
+        let da = null;
+
         switch (args.old.get(0)) {
             case "c-kwa":
                     if (!this.refs.hasOwnProperty(args.old.get(1)))
@@ -205,23 +177,13 @@ module.exports = class YAL {
                         args.keep(false);
                         break;
                     }*/
-                    let what = args.old.get(1);
-                    let search = args.old.get(2);
+                    da.what = args.old.get(1);
+                    da.search = args.old.get(2);
 
-                    if (what == "other") {
-                        if (args.get(0).startsWith("(")) {
-                            if (args.get(0).endsWith(")")) {
-                                what = args.get(0).substring(1, args.get(0).length - 1).trim();
-                                search = args.raw(1, -1);
-                            } else {
-                                let k = args.get(0).search(/\)/g);
-                                what = args.get(0).substring(1, k).trim();
-                                search = args.get(0).substring(k + 1) + args.raw(1, -1);
-                            }
-                        }
-                    }
+                    if (da.what == "other")
+                        da = this.extractWhatSearch(args, 0, "other");
 
-                    this.refs[what][search] = args.raw(0, -1);
+                    this.refs[da.what][da.search] = args.raw(0, -1);
 
                     fs.writeFile('./yal/refs.json', JSON.stringify(this.refs), (err) => {  
                         if (err) throw err;
