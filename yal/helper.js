@@ -44,9 +44,9 @@ module.exports = class Helper {
         this.messg = [];
         this.clean = [];
 
-        c.toLowerCase().trim().split(sep).forEach(e => {
+        c.trim().split(sep).forEach(e => {
             this.messg.push(e);
-            this.clean.push(e.trim().replace(/[\,\;\:\!\?\.]/g, ""));
+            this.clean.push(e.toLowerCase().trim().replace(/[\,\;\:\!\?\.]/g, ""));
         });
 
         return this;
@@ -54,6 +54,10 @@ module.exports = class Helper {
 
     count() {
         return this.messg.length;
+    }
+
+    args() {
+        return this.clean.length;
     }
 
     raw(i, j=null) {

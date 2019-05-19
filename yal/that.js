@@ -94,6 +94,7 @@ module.exports = class YAL {
                             sendMessage("Hum, je n'sais pas... c'est quoi '(" + da.what + ") " + da.search + "' ?");
                             if (da.what == "other")
                                 sendMessage("(avec le type entre parenthèses avant le nom stp : anime/manga/people/etc.. - par défaut : 'other')");
+                            sendMessage("si tu sais pas non plus répond 'rien' (mais pas rien stp)")
 
                             args.insert(1, da.what)
                             args.insert(2, da.search)
@@ -120,7 +121,8 @@ module.exports = class YAL {
                     da = this.extractWhatSearch(args, 1, "other");
 
                     if (this.refs.hasOwnProperty(da.what)) {
-                        this.refs[da.what][da.search] = undefined;
+                        //this.refs[da.what][da.search] = undefined;
+                        delete this.refs[da.what][da.search];
                         sendMessage("C'est fait !");
                     } else sendMessage("Rien a oublier...");
 
@@ -183,6 +185,11 @@ module.exports = class YAL {
 
         switch (args.old.get(0)) {
             case "c-kwa":
+                    if (args.get(0) == "rien" && args.args() == 1) {
+                        sendMessage("dommage...");
+                        args.keep(false);
+                        break;
+                    }
                     if (!this.refs.hasOwnProperty(args.old.get(1)))
                         this.refs[args.old.get(1)] = {};
 
@@ -222,9 +229,10 @@ module.exports = class YAL {
                     } else {
                         let hint = args.raw(0, -1);
                         let k = hint.search(/[1-5]/g);
-                        if (-1 < k)
+                        if (-1 < k) {
                             sendMessage(args.iterGet(Number(hint[k]) + args.indx - 6).url)
-                        else args.keep(false);
+                            args.keep(false);
+                        } else args.keep(true);
                     }
                 break;
 
@@ -235,6 +243,7 @@ module.exports = class YAL {
 
                 default:
                     args.keep(false);
+                    console.log("dropped into default with '" + args.old.get(0) + "'");
                     sendMessage("\"this message should not appear\" ;-)\n\n\t\tgg...");
             }
         }

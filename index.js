@@ -30,10 +30,17 @@ client.on('message', message => {
 
     // debug
     if (msg == "yal, coucou") {
-        sendMessage(JSON.stringify(hold, null, 4));
+        let c = "";
+        for (var k in hold) {
+            let h = hold[k];
+            c+= "- " + h.dude.username + " me fait un '" + h.get(0);
+            if (h.old) c+= "' après un '" + h.old.get(0);
+            c+= "'\n";
+        }
+        sendMessage(c || "coucou");
         return;
     } else if (msg == "yal, tu sais quoi") {
-        sendMessage(JSON.stringify(that.refs, null, 4));
+        sendMessage(JSON.stringify(that.refs, null, 4) || "rien");
         return;
     } else if (msg == "yal, range ta chambre") {
         hold = {};
@@ -55,7 +62,8 @@ client.on('message', message => {
     }
 
     if (hold[id] !== undefined && !hold[id].keep())
-        hold[id] = undefined;
+        //hold[id] = undefined;
+        delete hold[id];
 });
 
 client.login(process.env.TOKEN).catch(err => console.log(err) + process.exit(1));
