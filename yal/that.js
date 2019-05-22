@@ -48,25 +48,16 @@ module.exports = class YAL {
     }
 
     getHelp(sendMessage) {
-        let infos = "";
-        for (var what in this.refs) {
-            let da = JSON.stringify(this.refs[what])
-                    .replace(/[\{\}\"]/g, "")
-                    .replace(/\,/g, "\", ")
-                    .replace(/\:/g, " = \"");
-            if (da.trim())
-                infos+= "\t- " + what + ": " + da + "\"\n";
-        }
-
         sendMessage(
             "Bonjour ! Moi c'est YAL !\n" +
             "\n" +
             "Pour l'instant : \n" +
-            "\t- `yal, c-kwa` pour traduir du _weeb_ en _humain_ (si y a qqch que je connait pas, hésitez pas à me l'apprendre)\n" +
-            "\t- `yal, change` pour changer la définition d'un mot _weeb_ que je connait (ou pas)\n" +
-            "\t- `yal, c-ou` pour rechercher sur MyAnimeList (par défaut un anime, pour un autre supports préciser entre parenthèses avant le nom : anime/manga/people/etc..)\n" +
+            "\t- `yal, c-kwa xyz` pour traduir du _weeb_ en _humain_ (si y a qqch que je connait pas, hésitez pas à me l'apprendre)\n" +
+            "\t- `yal, change xyz` pour changer la définition d'un mot _weeb_ que je connait (ou pas)\n" +
+            "\t- `yal, oublie xyz` pour supprimer la définition d'un mot _weeb_ que je connait\n" +
+            "\t- `yal, c-ou xyz` pour rechercher sur MyAnimeList (par défaut un anime, pour un autre supports préciser entre parenthèses avant le nom : anime/manga/people/etc..)\n" +
             "\n" +
-            "Ce que je connait :\n" + infos
+            "Pour une liste de ce que je connait : `yal, c-kwa` (sans arguments)\n"
         );
 
         return this;
@@ -81,12 +72,15 @@ module.exports = class YAL {
             // same as `yal?`
             case "ptdr":
             case "t-ki":
+            case "tki":
             case "t-kwa":
-                    this.getHelp();
+            case "tkwa":
+                    this.getHelp(sendMessage);
                 break;
 
             // serious bizz
             case "c-kwa":
+            case "ckwa":
                     if (1 < args.count()) {
                         da = this.extractWhatSearch(args, 1, "other");
 
@@ -99,8 +93,19 @@ module.exports = class YAL {
                             args.insert(1, da.what)
                             args.insert(2, da.search)
                             args.keep(true);
-                        } else sendMessage(this.refs[da.what][da.search]);
-                    } else this.getHelp();
+                        } else sendMessage("(" + da.what + ") " + this.refs[da.what][da.search]);
+                    } else {
+                        let infos = "";
+                        for (var what in this.refs) {
+                            let da = JSON.stringify(this.refs[what])
+                                    .replace(/[\{\}\"]/g, "")
+                                    .replace(/\,/g, "\", ")
+                                    .replace(/\:/g, " = \"");
+                            if (da.trim())
+                                infos+= "\t- " + what + ": " + da + "\"\n";
+                        }
+                        sendMessage("Ce que je connait :\n" + infos)
+                    }
                 break;
 
             case "change":
@@ -118,18 +123,23 @@ module.exports = class YAL {
                 break;
 
             case "oublie":
-                    da = this.extractWhatSearch(args, 1, "other");
+            case "c-nul":
+            case "cnul":
+                    if (1 < args.count()) {
+                        da = this.extractWhatSearch(args, 1, "other");
 
-                    if (this.refs.hasOwnProperty(da.what)) {
-                        //this.refs[da.what][da.search] = undefined;
-                        delete this.refs[da.what][da.search];
-                        sendMessage("C'est fait !");
-                    } else sendMessage("Rien a oublier...");
+                        if (this.refs.hasOwnProperty(da.what)) {
+                            delete this.refs[da.what][da.search];
+                            sendMessage("C'est oublié ! (( (" + da.what + ") " + da.search + " ))");
+                        } else sendMessage("Rien a oublier...");
+
+                    } else sendMessage("JAMAIS !");
 
                     args.keep(false);
                 break;
 
             case "c-ou":
+            case "cou":
                     da = this.extractWhatSearch(args, 1, "anime");
 
                     if (this.refs.hasOwnProperty(da.what) && this.refs[da.what].hasOwnProperty(da.search))
@@ -160,6 +170,33 @@ module.exports = class YAL {
                     }
                 break;
 
+            case "c-ki":
+            case "cki":
+                    let search = args.get(1);
+
+                    if (this.refs.hasOwnProperty("people") && this.refs["people"].hasOwnProperty(search))
+                        search = this.refs["people"][search];
+
+                    console.log("seaching for " + search + " as a(n) " + "people");
+                    sendMessage("Att, je cherche...");
+                    mal.search("people", search)
+                        .then(info => {
+                            if (info.results[0] !== undefined) {
+                                sendMessage("<@" + args.dude.id + "> " + info.results[0].url + " ici ?");
+                                args.iterSet(info.results);
+                            } else sendMessage("Oh?! j'ai rien trouvé...");
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            sendMessage("Oups, erreur interne... ><");
+                            if (err.message.contains("Response:"))
+                                sendMessage("'" + err + "' en fait.. c pas ma faute on dirrait, lol");
+                            args.iterSet([err]);
+                        });
+
+                    args.keep(true);
+                break;
+
             case "hiragana":
                     sendMessage(Jap.toHiragana(args.raw(1, -1)));
                 break;
@@ -173,7 +210,7 @@ module.exports = class YAL {
                 break;
 
             default:
-                sendMessage("wut?             fait `yal?` si t'est perdu(e) ;-)");
+                sendMessage("wut?             fait `yal?` si t'est perdu(e)");
                 args.keep(false)
         }
 
@@ -185,6 +222,7 @@ module.exports = class YAL {
 
         switch (args.old.get(0)) {
             case "c-kwa":
+            case "ckwa":
                     if (args.get(0) == "rien" && args.args() == 1) {
                         sendMessage("dommage...");
                         args.keep(false);
@@ -217,6 +255,7 @@ module.exports = class YAL {
                 break;
 
             case "c-ou":
+            case "cou":
                     if (args.isNegative(0) || (args.has() > 1 && args.isNegative(1))) {
                         let c = "<@" + args.dude.id + "> Alors peut-être :", k = 0;
                         args.iterNext(5).forEach(e => c+= "\n\t" + ++k + ". " + e.title);

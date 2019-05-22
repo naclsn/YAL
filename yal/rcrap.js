@@ -22,18 +22,30 @@ module.exports = class Rcrap {
                     message.channel.send("et moi je suis là https://pictelm-yal.glitch.me/ !");
                 return true;
 
-            case "c-ki":
-                    message.channel.send("Error: NotImplementedException at [..]");
-                    message.channel.send("(bref, tu vois l'idée quoi)");
-                return true;
-
             case "jtm":
             case "tg":
-            case "thx":
-            case "ty":
             case "roast":
             case "hug":
+            case "<3":
                     message.channel.send("<@" + message.author.id + "> <3");
+                return true;
+
+            case "thx":
+            case "ty":
+            case "merci":
+            case "mrc":
+                    message.channel.send("<@" + message.author.id + "> dr");
+                return true;
+
+            case "stp":
+                    message.channel.send("<@" + message.author.id + "> non");
+                return true;
+
+            case "pierre":
+            case "feuille":
+            case "ciseaux":
+                    let o =  ["pierre", "feuille", "ciseaux"][Math.floor(Math.random() * 3)];
+                    message.channel.send("<@" + message.author.id + "> " + o + " !");
                 return true;
         } return false;
     }

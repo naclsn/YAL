@@ -39,9 +39,6 @@ client.on('message', message => {
         }
         sendMessage(c || "coucou");
         return;
-    } else if (msg == "yal, tu sais quoi") {
-        sendMessage(JSON.stringify(that.refs, null, 4) || "rien");
-        return;
     } else if (msg == "yal, range ta chambre") {
         hold = {};
         return;
@@ -62,7 +59,6 @@ client.on('message', message => {
     }
 
     if (hold[id] !== undefined && !hold[id].keep())
-        //hold[id] = undefined;
         delete hold[id];
 });
 
