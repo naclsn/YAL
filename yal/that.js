@@ -99,12 +99,12 @@ module.exports = class YAL {
                         for (var what in this.refs) {
                             let da = JSON.stringify(this.refs[what])
                                     .replace(/[\{\}\"]/g, "")
-                                    .replace(/\,/g, "\", ")
+                                    .replace(/\,([^ ])/g, "\",\n\t$1")
                                     .replace(/\:/g, " = \"");
                             if (da.trim())
-                                infos+= "\t- " + what + ": " + da + "\"\n";
+                                infos+= what + ":\n\t" + da + "\"\n";
                         }
-                        sendMessage("Ce que je connait :\n" + infos)
+                        sendMessage("Ce que je connait :\n\n" + infos)
                     }
                 break;
 
