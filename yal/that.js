@@ -271,7 +271,10 @@ module.exports = class YAL {
                         if (-1 < k) {
                             sendMessage(args.iterGet(Number(hint[k]) + args.indx - 6).url)
                             args.keep(false);
-                        } else args.keep(true);
+                        } else {
+                            args.insert(0, "c-ou");
+                            args.keep(true);
+                        }
                     }
                 break;
 

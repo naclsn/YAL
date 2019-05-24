@@ -22,6 +22,10 @@ module.exports = class Rcrap {
                     message.channel.send("et moi je suis là https://pictelm-yal.glitch.me/ !");
                 return true;
 
+            case "bn":
+                    message.channel.send("Bonne nuit <@" + message.author.id + ">");
+                return true;
+            
             case "jtm":
             case "tg":
             case "roast":
@@ -34,7 +38,8 @@ module.exports = class Rcrap {
             case "ty":
             case "merci":
             case "mrc":
-                    message.channel.send("<@" + message.author.id + "> dr");
+            case "cimer":
+                    message.channel.send("dr <@" + message.author.id + ">");
                 return true;
 
             case "stp":
@@ -44,6 +49,7 @@ module.exports = class Rcrap {
             case "pierre":
             case "feuille":
             case "ciseaux":
+            case "papier":
                     let o =  ["pierre", "feuille", "ciseaux"][Math.floor(Math.random() * 3)];
                     message.channel.send("<@" + message.author.id + "> " + o + " !");
                 return true;

@@ -46,7 +46,7 @@ module.exports = class Helper {
 
         c.trim().split(sep).forEach(e => {
             this.messg.push(e);
-            this.clean.push(e.toLowerCase().trim().replace(/[\,\;\:\!\?\.]/g, ""));
+            this.clean.push(Helper.accentFold(e.toLowerCase().trim().replace(/[\,\;\:\!\?\.]/g, "")));
         });
 
         return this;
