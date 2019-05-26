@@ -4,7 +4,7 @@ YAL (YourAnimeList) is a [Discord](https://discordapp.com/) bot designed to prov
 
 > The in-discord help command is `"yal?"`.
 > 
-> (Please note that YAl was made for a small, French community.)
+> (Please note that YAL was made for a small, French community.)
 
 ---
 
