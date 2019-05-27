@@ -31,6 +31,10 @@ module.exports = class Rcrap {
             case "roast":
             case "hug":
             case "<3":
+            case "c-bien":
+            case "cbien":
+            case "c-bi1":
+            case "cbi1":
                     message.channel.send("<@" + message.author.id + "> <3");
                 return true;
 
@@ -39,6 +43,9 @@ module.exports = class Rcrap {
             case "merci":
             case "mrc":
             case "cimer":
+            case "bravo":
+            case "brv":
+            case "gg":
                     message.channel.send("dr <@" + message.author.id + ">");
                 return true;
 

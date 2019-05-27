@@ -3,6 +3,7 @@ const fs = require('fs');
 const Jikan = require('jikan-node');
 const mal = new Jikan();
 
+const Helper = require('./helper.js');
 const Rcrap = require('./rcrap.js');
 const Jap = require('./jap.js');
 
@@ -198,11 +199,11 @@ module.exports = class YAL {
                 break;
 
             case "hiragana":
-                    sendMessage(Jap.toHiragana(args.raw(1, -1)));
+                    sendMessage(Jap.toHiragana(Helper.accentFold(args.raw(1, -1))));
                 break;
 
             case "katakana":
-                    sendMessage(Jap.toKatakana(args.raw(1, -1)));
+                    sendMessage(Jap.toKatakana(Helper.accentFold(args.raw(1, -1))));
                 break;
 
             case "romaji":

@@ -5,10 +5,16 @@ const romaji = require("./jap/romaji.json");
 module.exports = class Jap {
 
     static to(dict, c, _tsu=null) {
+        if (_tsu)
+            c = c.replace(/([STCKGBP])\1/gi, _tsu);
+
         for (let k in dict)
             c = c.replace(new RegExp(k, "gi"), dict[k]);
 
-        return _tsu ? c.replace(/[STCKGBP]/gi, _tsu) : c.replace(/[っッ](.)/g, "$1$1");
+        if (!_tsu)
+            c = c.replace(/[っッ](.)/g, "$1$1");
+
+        return c;
     }
 
     static toHiragana(c) {
