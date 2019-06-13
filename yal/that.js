@@ -233,11 +233,6 @@ module.exports = class YAL {
                         this.refs[args.old.get(1)] = {};
 
             case "change":
-                    /*if (args.isNegative(0)) {
-                        sendMessage("Aborting update due to negatively interpreted answer '" + args.raw(0) + "'");
-                        args.keep(false);
-                        break;
-                    }*/
                     da = { what: args.old.get(1), search: args.old.get(2) };
 
                     if (da.what == "other")

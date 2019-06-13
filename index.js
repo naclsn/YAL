@@ -48,6 +48,10 @@ client.on('message', message => {
         that.getHelp(sendMessage);
         return;
     }
+    if (msg.startsWith("yal!") || msg.startsWith("yal !")) {
+        sendMessage("<@" + message.author.id + ">" + (msg.charAt(3) == ' ' ? " " : "") + "!");
+        return;
+    }
 
     // command process
     if (msg.startsWith("yal")) {
